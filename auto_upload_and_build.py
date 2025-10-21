@@ -334,8 +334,8 @@ def main():
     clear_screen()
     print_header()
     
-    # 定义仓库URL（修复用户名和仓库名拼写）
-    repo_url = "https://github.com/wusixin9461/jiaoben.git"
+    # 定义仓库URL（修复仓库名为jiaoben1）
+    repo_url = "https://github.com/wusixin9461/jiaoben1.git"
     
     # 获取当前目录作为项目目录（避免硬编码路径问题）
     project_dir = os.path.dirname(os.path.abspath(__file__))
