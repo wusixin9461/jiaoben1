@@ -100,7 +100,8 @@ android.api = 33
 android.minapi = 21
 
 # (int) Android SDK version to use
-android.sdk = 29
+# 禁用已弃用的android.sdk配置，避免构建警告
+# android.sdk = 29
 
 # (str) Android NDK version to use
 android.ndk = 25.1.8937393
