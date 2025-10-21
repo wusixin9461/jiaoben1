@@ -79,9 +79,21 @@ jobs:
 
     - name: Build APK
       run: |
-        # 设置更长的超时时间
+        # 设置更长的超时时间和环境变量
         export P4A_TIMEOUT=1800
-        buildozer -v android debug
+        export P4A_RELEASE_STATUS=debug
+        export LC_ALL=C.UTF-8
+        export LANG=C.UTF-8
+        
+        # 增加文件描述符限制
+        ulimit -n 4096 || true
+        
+        # 设置临时文件目录，避免权限问题
+        export TMPDIR=$(mktemp -d)
+        
+        echo "开始构建APK，忽略android.sdk弃用警告..."
+        # 添加--ignore-deprecated选项忽略弃用警告，使用--clean清理之前的构建文件
+        buildozer -v android debug --ignore-deprecated --clean
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
