@@ -300,13 +300,15 @@ def check_workflow_file():
 
 def generate_build_instructions():
     """生成构建说明"""
-    instructions = """
+    # 从main函数中获取repo_url
+    repo_url = "https://github.com/wusixin9461/jiaoben1.git"
+    instructions = f"""
 ============================================================
 🎉 项目上传成功！接下来请手动触发GitHub Actions构建：
 ============================================================
 
 1. 打开GitHub仓库页面：
-   https://github.com/wusixin9641/jiaben
+   {repo_url}
 
 2. 点击顶部的 "Actions" 标签
 
@@ -321,7 +323,7 @@ def generate_build_instructions():
 7. 构建完成后，在构建记录页面的底部 "Artifacts" 部分
    下载 "pokemmo-automation-apk" 文件
 
-8. 解压后即可得到APK安装包！
+8. 解压后将APK文件复制到 E:\\#9#531\\APP 文件夹中
 
 ============================================================
 注意：构建过程可能会因为网络或依赖问题失败，请耐心等待并查看日志
@@ -453,8 +455,40 @@ jobs:
     # 显示构建说明
     print(generate_build_instructions())
     
-    print("\n自动上传完成！请按照上面的说明触发GitHub Actions构建")
-    input("按Enter键退出...")
+    print("\n自动上传完成！现在将启动APK下载和复制工具...")
+    print("=" * 60)
+    
+    # 确保APP文件夹存在
+    app_folder = "E:\\#9#531\\APP"
+    if not os.path.exists(app_folder):
+        try:
+            os.makedirs(app_folder)
+            print(f"已创建APP文件夹: {app_folder}")
+        except Exception as e:
+            print(f"创建APP文件夹失败: {e}")
+    
+    # 调用APK下载和复制脚本
+    try:
+        download_script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "auto_download_and_copy_apk.py")
+        if os.path.exists(download_script):
+            print("正在启动APK自动下载与复制工具...")
+            print("该工具将指导您完成GitHub Actions构建和APK文件的下载与复制")
+            print("\n请按Enter键继续...")
+            input()
+            # 在新的命令窗口中运行下载脚本
+            if os.name == 'nt':  # Windows
+                subprocess.run(['start', 'cmd', '/k', 'python', download_script], shell=True)
+            else:
+                subprocess.run(['python', download_script])
+        else:
+            print("未找到APK下载脚本，请手动操作")
+            print("按Enter键退出...")
+            input()
+    except Exception as e:
+        print(f"启动下载脚本失败: {e}")
+        print("请手动操作")
+        print("按Enter键退出...")
+        input()
 
 if __name__ == "__main__":
     main()
