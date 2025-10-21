@@ -66,9 +66,9 @@ jobs:
         echo "安装主要依赖包..."
         sudo apt-get install -y --no-install-recommends git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev
         
-        # 安装buildozer
+        # 安装buildozer和Cython
         python -m pip install --upgrade pip
-        pip install --upgrade buildozer
+        pip install --upgrade buildozer cython
         
         # 验证libtinfo安装状态
         echo "验证libtinfo安装状态..."
