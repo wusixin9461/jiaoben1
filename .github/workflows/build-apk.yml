@@ -45,15 +45,29 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install buildozer
+        # 步骤1: 检查libtinfo相关包的正确名称
+        apt-cache search libtinfo
+        
+        # 步骤2: 更新软件源
         sudo apt-get update
-        # 添加旧版本仓库以获取libtinfo5
-        echo "deb http://archive.ubuntu.com/ubuntu jammy universe" | sudo tee /etc/apt/sources.list.d/jammy-universe.list
-        sudo apt-get update
-        # 尝试安装libtinfo5，如果失败则跳过
-        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev || true
-        # 尝试使用aptitude安装（如果有必要）
-        sudo apt-get install -y aptitude
-        sudo aptitude install -y libtinfo5 -f -o Dpkg::Options::="--force-confold" || echo "libtinfo5安装失败，继续执行"
+        
+        # 步骤3: 尝试安装主要依赖包
+        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev
+        
+        # 步骤4: 尝试安装libtinfo5，如果失败则尝试libtinfo6
+        echo "尝试安装libtinfo5..."
+        sudo apt-get install -y libtinfo5 || {
+          echo "libtinfo5安装失败，尝试安装libtinfo6..."
+          sudo apt-get install -y libtinfo6
+          # 如果libtinfo6安装成功，创建软链接以提供libtinfo5的兼容性
+          if [ -f /usr/lib/x86_64-linux-gnu/libtinfo.so.6 ]; then
+            sudo ln -sf /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5
+            echo "已创建libtinfo.so.5到libtinfo.so.6的软链接"
+          fi
+        }
+        
+        # 验证安装
+        ls -la /usr/lib/x86_64-linux-gnu/libtinfo* || true
 
     - name: Build APK
       run: |
