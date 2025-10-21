@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 120
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -24,7 +24,7 @@ jobs:
         
     # 缓存依赖以加快构建速度
     - name: Cache Python dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
@@ -32,7 +32,7 @@ jobs:
           ${{ runner.os }}-pip-
     
     - name: Cache buildozer
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.buildozer
